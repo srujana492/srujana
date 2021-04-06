@@ -1,0 +1,38 @@
+pipeline{
+    tools{
+        maven 'maven3'
+    }
+    agent any
+    stages{
+        stage('checkout'){
+            steps{
+                git'https://github.com/srujana492/DevOpsClassCodes.git'
+            }
+        }
+        stage('compile'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('codereview'){
+            steps{
+            sh 'mvn pmd:pmd'
+        }
+    } 
+    stage('unittest'){
+        steps{
+            sh 'mvn test'
+        }
+    }
+    stage('matrixcheck'){
+        steps{
+            sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+        }
+    }
+    stage('package'){
+        steps{
+            sh 'mvn package'
+        }
+    }
+    }
+}
